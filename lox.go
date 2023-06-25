@@ -8,8 +8,17 @@ import (
 	"strings"
 )
 
+func errorm(line int, message string) {
+	report(line, "", message)
+}
+
+func report(line int, where, message string) {
+	fmt.Printf("[line %d] Error %s: %s", line, where, message)
+}
+
 type Lox struct {
-	rw *bufio.ReadWriter
+	rw       *bufio.ReadWriter
+	hadError bool
 }
 
 func NewLox(rw *bufio.ReadWriter) *Lox {
@@ -78,6 +87,9 @@ func (l *Lox) runFile(fileName string) error {
 	if err != nil {
 		return err
 	}
+	if l.hadError {
+		os.Exit(65)
+	}
 
 	return nil
 }
@@ -98,6 +110,8 @@ func (l *Lox) runPrompt() error {
 		if err != nil {
 			return err
 		}
+		l.hadError = false
+
 		_, err = l.rw.WriteString("> ")
 		if err != nil {
 			return err
