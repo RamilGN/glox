@@ -2,8 +2,6 @@ package main
 
 import (
 	"testing"
-
-	"github.com/stretchr/testify/assert"
 )
 
 func TestScanner(t *testing.T) {
@@ -82,7 +80,7 @@ func TestScanner(t *testing.T) {
 		t.Run(ts.title, func(t *testing.T) {
 			s := Scanner{source: ts.source}
 			s.ScanTokens()
-			assert.Equal(t, ts.expected, s.tokens)
+			assertEqualSlice(t, ts.expected, s.tokens)
 		})
 	}
 }
