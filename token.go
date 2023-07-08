@@ -3,10 +3,10 @@ package main
 import "fmt"
 
 type Token struct {
-	tType   TokenType
-	lexeme  []rune
 	literal any
+	lexeme  []rune
 	line    int
+	tType   TokenType
 }
 
 func (t *Token) String() string {

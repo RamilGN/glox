@@ -10,7 +10,7 @@ type Scanner struct {
 }
 
 func (s *Scanner) ScanTokens() {
-	s.line += 1
+	s.line++
 	s.start = 0
 	s.current = 0
 
@@ -52,6 +52,7 @@ func (s *Scanner) scanToken() {
 		} else {
 			t = bang
 		}
+
 		s.addToken(t, nil)
 	case '=':
 		var t TokenType
@@ -60,6 +61,7 @@ func (s *Scanner) scanToken() {
 		} else {
 			t = equal
 		}
+
 		s.addToken(t, nil)
 	case '<':
 		var t TokenType
@@ -68,6 +70,7 @@ func (s *Scanner) scanToken() {
 		} else {
 			t = less
 		}
+
 		s.addToken(t, nil)
 	case '>':
 		var t TokenType
@@ -76,6 +79,7 @@ func (s *Scanner) scanToken() {
 		} else {
 			t = greater
 		}
+
 		s.addToken(t, nil)
 	case '/':
 		if s.match('/') {
@@ -120,7 +124,7 @@ func (s *Scanner) addToken(tType TokenType, literal any) {
 	s.tokens = append(s.tokens, Token{tType: tType, lexeme: text, literal: literal, line: s.line})
 }
 
-// match consumes next expected char
+// match consumes next expected char.
 func (s *Scanner) match(expected rune) bool {
 	if s.isAtEnd() {
 		return false
@@ -131,15 +135,16 @@ func (s *Scanner) match(expected rune) bool {
 	}
 
 	s.current++
+
 	return true
 }
 
-// cur gets current rune from source
+// cur gets current rune from source.
 func (s *Scanner) cur() rune {
 	return s.source[s.current]
 }
 
-// peek is safe cur
+// Peek is safe cur.
 func (s *Scanner) peek() rune {
 	if s.isAtEnd() {
 		return '\000'
@@ -148,7 +153,7 @@ func (s *Scanner) peek() rune {
 	return s.cur()
 }
 
-// isAtEnd checks if the scanner on the last element
+// isAtEnd checks if the scanner on the last element.
 func (s *Scanner) isAtEnd() bool {
 	return s.current >= len(s.source)-1
 }

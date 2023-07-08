@@ -29,7 +29,7 @@ func assertNotNil(t *testing.T, val any) {
 	}
 }
 
-// TODO: generics
+// TODO: generics.
 func assertEqualString(t *testing.T, expected, actual string) {
 	t.Helper()
 
@@ -38,7 +38,7 @@ func assertEqualString(t *testing.T, expected, actual string) {
 	}
 }
 
-// TODO: generics
+// TODO: generics.
 func assertEqualSlice(t *testing.T, expected, actual any) {
 	t.Helper()
 
@@ -51,6 +51,7 @@ func assertType(t *testing.T, expected, actual any) {
 	t.Helper()
 
 	expectedType := reflect.TypeOf(expected)
+
 	actualType := reflect.TypeOf(actual)
 	if expectedType != actualType {
 		t.Errorf("expected type: %v, actual type: %v", expectedType, actualType)

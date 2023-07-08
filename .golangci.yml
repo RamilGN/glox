@@ -1,0 +1,29 @@
+linters:
+  enable-all: true
+  disable:
+    - exhaustivestruct
+    - exhaustruct
+    - funlen
+    - golint
+    - gocyclo
+    - cyclop
+    - ifshort
+    - interfacer
+    - nlreturn
+    - nosnakecase
+    - paralleltest
+    - scopelint
+    - structcheck
+    - tagliatelle
+    - varcheck
+    - varnamelen
+    - gomoddirectives
+    - gomodguard
+    - musttag
+
+    # TODO, FIXME is ok
+    - godox
+
+    # deprecated
+    - deadcode
+    - maligned

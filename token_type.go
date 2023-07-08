@@ -3,7 +3,7 @@ package main
 type TokenType int
 
 const (
-	// Single-character tokens
+	// Single-character tokens.
 	leftParen TokenType = iota
 	rightParen
 	leftBrace
@@ -16,7 +16,7 @@ const (
 	slash
 	star
 
-	// One or two character tokens
+	// One or two character tokens.
 	bang
 	bangEqual
 	equal
