@@ -14,7 +14,7 @@ func (s *Scanner) ScanTokens() {
 	s.start = 0
 	s.current = 0
 
-	for s.current < len(s.source) {
+	for !s.isAtEnd() {
 		s.start = s.current
 		s.scanToken()
 	}
@@ -23,7 +23,7 @@ func (s *Scanner) ScanTokens() {
 }
 
 func (s *Scanner) scanToken() {
-	switch s.cur() {
+	switch s.advance() {
 	case '(':
 		s.addToken(leftParen, nil)
 	case ')':
@@ -44,7 +44,6 @@ func (s *Scanner) scanToken() {
 		s.addToken(semicolon, nil)
 	case '*':
 		s.addToken(star, nil)
-
 	case '!':
 		var t TokenType
 		if s.match('=') {
@@ -84,7 +83,7 @@ func (s *Scanner) scanToken() {
 	case '/':
 		if s.match('/') {
 			for s.peek() != '\n' && !s.isAtEnd() {
-				s.current++
+				s.advance()
 			}
 		} else {
 			s.addToken(slash, nil)
@@ -95,32 +94,21 @@ func (s *Scanner) scanToken() {
 	case '\n':
 		s.line++
 	case '"':
-		s.current++
-
-		for s.peek() != '"' && !s.isAtEnd() {
-			if s.cur() == '\n' {
-				s.line++
-			}
-
-			s.current++
-		}
-
-		if s.source[s.current] != '"' {
-			errorm(s.line, "Unterminated string")
-			break
-		}
-
-		val := s.source[s.start+1 : s.current] // trim the surronding quotes
-		s.addToken(stringw, val)
+		s.scanString()
 	default:
 		errorm(s.line, "Unexpected character.")
 	}
+}
 
+func (s *Scanner) advance() rune {
+	char := s.source[s.current]
 	s.current++
+
+	return char
 }
 
 func (s *Scanner) addToken(tType TokenType, literal any) {
-	text := s.source[s.start : s.current+1]
+	text := s.source[s.start:s.current]
 	s.tokens = append(s.tokens, Token{tType: tType, lexeme: text, literal: literal, line: s.line})
 }
 
@@ -130,11 +118,11 @@ func (s *Scanner) match(expected rune) bool {
 		return false
 	}
 
-	if s.source[s.current+1] != expected {
+	if s.source[s.current] != expected {
 		return false
 	}
 
-	s.current++
+	s.advance()
 
 	return true
 }
@@ -153,7 +141,28 @@ func (s *Scanner) peek() rune {
 	return s.cur()
 }
 
-// isAtEnd checks if the scanner on the last element.
+// isAtEnd checks if the scanner can't scan next token.
 func (s *Scanner) isAtEnd() bool {
-	return s.current >= len(s.source)-1
+	return s.current >= len(s.source)
+}
+
+// scanString scan string with double quotes.
+func (s *Scanner) scanString() {
+	for s.peek() != '"' && !s.isAtEnd() {
+		if s.cur() == '\n' {
+			s.line++
+		}
+
+		s.advance()
+	}
+
+	if s.isAtEnd() {
+		errorm(s.line, "Unterminated string")
+		return
+	}
+
+	s.advance()
+
+	val := s.source[s.start+1 : s.current-1] // trim the surronding quotes
+	s.addToken(stringw, val)
 }
