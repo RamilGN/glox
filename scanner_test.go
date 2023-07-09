@@ -74,6 +74,14 @@ func TestScanner(t *testing.T) {
 				{tType: eof, lexeme: []rune{}, literal: nil, line: 1},
 			},
 		},
+		{
+			title:  "digit",
+			source: []rune("523.23"),
+			expected: []Token{
+				{tType: number, lexeme: []rune("523.23"), literal: 523.23, line: 1},
+				{tType: eof, lexeme: []rune{}, literal: nil, line: 1},
+			},
+		},
 	}
 
 	for _, ts := range tests {

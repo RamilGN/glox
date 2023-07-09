@@ -1,5 +1,9 @@
 package main
 
+import (
+	"strconv"
+)
+
 type Scanner struct {
 	source []rune
 	tokens []Token
@@ -23,7 +27,9 @@ func (s *Scanner) ScanTokens() {
 }
 
 func (s *Scanner) scanToken() {
-	switch s.advance() {
+	c := s.advance()
+
+	switch c {
 	case '(':
 		s.addToken(leftParen, nil)
 	case ')':
@@ -96,7 +102,11 @@ func (s *Scanner) scanToken() {
 	case '"':
 		s.scanString()
 	default:
-		errorm(s.line, "Unexpected character.")
+		if s.isDigit(c) {
+			s.scanNumber()
+		} else {
+			errorm(s.line, "Unexpected character.")
+		}
 	}
 }
 
@@ -141,9 +151,22 @@ func (s *Scanner) peek() rune {
 	return s.cur()
 }
 
+func (s *Scanner) peekNext() rune {
+	if s.current+1 >= len(s.source) {
+		return '\000'
+	}
+
+	return s.source[s.current+1]
+}
+
 // isAtEnd checks if the scanner can't scan next token.
 func (s *Scanner) isAtEnd() bool {
 	return s.current >= len(s.source)
+}
+
+// isDigit checks if rune is digit.
+func (s *Scanner) isDigit(c rune) bool {
+	return c >= '0' && c <= '9'
 }
 
 // scanString scan string with double quotes.
@@ -165,4 +188,21 @@ func (s *Scanner) scanString() {
 
 	val := s.source[s.start+1 : s.current-1] // trim the surronding quotes
 	s.addToken(stringw, val)
+}
+
+func (s *Scanner) scanNumber() {
+	for s.isDigit(s.peek()) {
+		s.advance()
+	}
+
+	if s.peek() == '.' && s.isDigit(s.peekNext()) {
+		s.advance()
+
+		for s.isDigit(s.peek()) {
+			s.advance()
+		}
+	}
+
+	num, _ := strconv.ParseFloat(string(s.source[s.start:s.current]), 64)
+	s.addToken(number, num)
 }
