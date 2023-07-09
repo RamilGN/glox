@@ -82,6 +82,22 @@ func TestScanner(t *testing.T) {
 				{tType: eof, lexeme: []rune{}, literal: nil, line: 1},
 			},
 		},
+		{
+			title:  "identifier",
+			source: []rune("forbs"),
+			expected: []Token{
+				{tType: identifier, lexeme: []rune("forbs"), literal: nil, line: 1},
+				{tType: eof, lexeme: []rune{}, literal: nil, line: 1},
+			},
+		},
+		{
+			title:  "reserved keyword",
+			source: []rune("if"),
+			expected: []Token{
+				{tType: ifw, lexeme: []rune("if"), literal: nil, line: 1},
+				{tType: eof, lexeme: []rune{}, literal: nil, line: 1},
+			},
+		},
 	}
 
 	for _, ts := range tests {

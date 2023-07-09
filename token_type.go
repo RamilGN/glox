@@ -51,3 +51,22 @@ const (
 
 	eof
 )
+
+var reservedKeywords = map[string]TokenType{
+	"and":    and,
+	"class":  class,
+	"else":   elsew,
+	"false":  falsew,
+	"for":    forw,
+	"fun":    fun,
+	"if":     ifw,
+	"nil":    nilw,
+	"or":     or,
+	"print":  printw,
+	"return": returnw,
+	"super":  super,
+	"this":   this,
+	"true":   truew,
+	"var":    varw,
+	"while":  while,
+}

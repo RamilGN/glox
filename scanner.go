@@ -102,9 +102,12 @@ func (s *Scanner) scanToken() {
 	case '"':
 		s.scanString()
 	default:
-		if s.isDigit(c) {
+		switch {
+		case s.isDigit(c):
 			s.scanNumber()
-		} else {
+		case s.isAlpha(c):
+			s.scanIdentifier()
+		default:
 			errorm(s.line, "Unexpected character.")
 		}
 	}
@@ -169,6 +172,16 @@ func (s *Scanner) isDigit(c rune) bool {
 	return c >= '0' && c <= '9'
 }
 
+// isAlpha checks if rune is char.
+func (s *Scanner) isAlpha(c rune) bool {
+	return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_'
+}
+
+// isAlpha checks if rune is char or digit.
+func (s *Scanner) isAlphaNumeric(c rune) bool {
+	return s.isAlpha(c) || s.isDigit(c)
+}
+
 // scanString scan string with double quotes.
 func (s *Scanner) scanString() {
 	for s.peek() != '"' && !s.isAtEnd() {
@@ -186,8 +199,8 @@ func (s *Scanner) scanString() {
 
 	s.advance()
 
-	val := s.source[s.start+1 : s.current-1] // trim the surronding quotes
-	s.addToken(stringw, val)
+	text := s.source[s.start+1 : s.current-1] // trim the surronding quotes
+	s.addToken(stringw, text)
 }
 
 func (s *Scanner) scanNumber() {
@@ -205,4 +218,19 @@ func (s *Scanner) scanNumber() {
 
 	num, _ := strconv.ParseFloat(string(s.source[s.start:s.current]), 64)
 	s.addToken(number, num)
+}
+
+func (s *Scanner) scanIdentifier() {
+	for s.isAlphaNumeric(s.peek()) {
+		s.advance()
+	}
+
+	text := s.source[s.start:s.current]
+
+	tType, ok := reservedKeywords[string(text)]
+	if !ok {
+		tType = identifier
+	}
+
+	s.addToken(tType, nil)
 }
