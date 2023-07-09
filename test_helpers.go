@@ -34,7 +34,7 @@ func assertEqualString(t *testing.T, expected, actual string) {
 	t.Helper()
 
 	if expected != actual {
-		t.Errorf("expected: %v, actual: %v", expected, actual)
+		t.Errorf("expected: %q, actual: %q", expected, actual)
 	}
 }
 

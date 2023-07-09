@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"io"
 	"os"
-	"strings"
 )
 
 var errLox = errors.New("[Lox]")
@@ -16,7 +15,7 @@ func errorm(line int, message string) {
 }
 
 func report(line int, where, message string) {
-	fmt.Fprintf(os.Stdin, "[line %d] Error %s: %s", line, where, message)
+	fmt.Fprintf(os.Stdin, "[line %d] Error %s: %s\n", line, where, message)
 }
 
 type Lox struct {
@@ -55,11 +54,11 @@ func (l *Lox) Start(args []string) error {
 }
 
 func (l *Lox) run(src string) error {
-	scanner := bufio.NewScanner(strings.NewReader(src))
-	scanner.Split(bufio.ScanWords)
+	scanner := NewScanner([]rune(src))
+	scanner.ScanTokens()
 
-	for scanner.Scan() {
-		_, err := l.rw.WriteString(scanner.Text())
+	for _, v := range scanner.tokens {
+		_, err := l.rw.WriteString(v.String())
 		if err != nil {
 			return fmt.Errorf("%w. %w", errLox, err)
 		}

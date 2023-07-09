@@ -24,7 +24,7 @@ func TestStart(t *testing.T) {
 		err := l.Start([]string{})
 
 		assertNil(t, err)
-		assertEqualString(t, "> foo\n> ", wb.String())
+		assertEqualString(t, "> identifier foo <nil>\neof  <nil>\n> ", wb.String())
 	})
 
 	t.Run("one arg(filename)", func(t *testing.T) {
@@ -42,7 +42,7 @@ func TestStart(t *testing.T) {
 		err = l.Start([]string{file.Name()})
 
 		assertNil(t, err)
-		assertEqualString(t, "foo\n", wb.String())
+		assertEqualString(t, "identifier foo <nil>\neof  <nil>\n", wb.String())
 	})
 
 	t.Run("too many args", func(t *testing.T) {

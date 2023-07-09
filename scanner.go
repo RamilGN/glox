@@ -5,12 +5,18 @@ import (
 )
 
 type Scanner struct {
+	reservedKeywords map[string]TokenType
+
 	source []rune
 	tokens []Token
 
 	start   int
 	current int
 	line    int
+}
+
+func NewScanner(source []rune) *Scanner {
+	return &Scanner{source: source, reservedKeywords: getReservedKeywords()}
 }
 
 func (s *Scanner) ScanTokens() {
@@ -227,7 +233,7 @@ func (s *Scanner) scanIdentifier() {
 
 	text := s.source[s.start:s.current]
 
-	tType, ok := reservedKeywords[string(text)]
+	tType, ok := s.reservedKeywords[string(text)]
 	if !ok {
 		tType = identifier
 	}

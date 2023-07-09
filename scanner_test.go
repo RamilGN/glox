@@ -102,7 +102,7 @@ func TestScanner(t *testing.T) {
 
 	for _, ts := range tests {
 		t.Run(ts.title, func(t *testing.T) {
-			s := Scanner{source: ts.source}
+			s := NewScanner(ts.source)
 			s.ScanTokens()
 			assertEqualSlice(t, ts.expected, s.tokens)
 		})
