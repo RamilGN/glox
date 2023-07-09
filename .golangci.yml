@@ -1,29 +1,45 @@
+run:
+  go: "1.20"
+
 linters:
   enable-all: true
   disable:
-    - exhaustivestruct
-    - exhaustruct
-    - funlen
-    - golint
-    - gocyclo
-    - cyclop
-    - ifshort
-    - interfacer
-    - nlreturn
-    - nosnakecase
-    - paralleltest
-    - scopelint
-    - structcheck
-    - tagliatelle
-    - varcheck
-    - varnamelen
-    - gomoddirectives
+    # Allow and block Go module dependencies, don't need this.
     - gomodguard
-    - musttag
 
-    # TODO, FIXME is ok
+    # Validating tags according to rules, don't need this.
+    - tagliatelle
+
+    # Blank line before return, don't need this.
+    - nlreturn
+
+    # Cyclomatic complexity, don't need this
+    - gocyclo
+
+    # Parallel tests, don't need this.
+    - paralleltest
+
+    # Functions length, don't need this.
+    - funlen
+
+    # Default values is ok.
+    - exhaustruct
+
+    # TODO, FIXME is ok.
     - godox
 
-    # deprecated
+    # Short name vars acceptable for user types.
+    - varnamelen
+
+    # Deprecated.
     - deadcode
     - maligned
+    - exhaustivestruct
+    - cyclop
+    - structcheck
+    - nosnakecase
+    - interfacer
+    - scopelint
+    - varcheck
+    - ifshort
+    - golint
