@@ -4,4 +4,8 @@ lint:
 
 .PHONY: test
 test:
-	go test ./...
+	@go test ./...
+
+.PHONY: gen
+gen:
+	@go generate ./...

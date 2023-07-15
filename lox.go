@@ -1,3 +1,5 @@
+//go:generate go run tools/ast/main.go
+
 package main
 
 import (
