@@ -4,6 +4,9 @@ run:
 linters:
   enable-all: true
   disable:
+    # Complexity, don't need this
+    - gocognit
+
     # Allow and block Go module dependencies, don't need this.
     - gomodguard
 

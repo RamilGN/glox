@@ -98,6 +98,13 @@ func TestScanner(t *testing.T) {
 				{tType: eof, lexeme: []rune{}, literal: nil, line: 1},
 			},
 		},
+		{
+			title:  "multiline comment blocks",
+			source: []rune("/*foo /* */ \n\nbar*/"),
+			expected: []Token{
+				{tType: eof, lexeme: []rune{}, literal: nil, line: 3},
+			},
+		},
 	}
 
 	for _, ts := range tests {

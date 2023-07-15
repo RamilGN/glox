@@ -92,15 +92,19 @@ func (s *Scanner) scanToken() {
 		}
 
 		s.addToken(t, nil)
+
+	// Comments.
 	case '/':
-		if s.match('/') {
+		switch {
+		case s.match('/'):
 			for s.peek() != '\n' && !s.isAtEnd() {
 				s.advance()
 			}
-		} else {
+		case s.match('*'):
+			s.scanBlockComment()
+		default:
 			s.addToken(slash, nil)
 		}
-	case ' ':
 	case '\r':
 	case '\t':
 	case '\n':
@@ -191,7 +195,7 @@ func (s *Scanner) isAlphaNumeric(c rune) bool {
 // scanString scan string with double quotes.
 func (s *Scanner) scanString() {
 	for s.peek() != '"' && !s.isAtEnd() {
-		if s.cur() == '\n' {
+		if s.peek() == '\n' {
 			s.line++
 		}
 
@@ -239,4 +243,31 @@ func (s *Scanner) scanIdentifier() {
 	}
 
 	s.addToken(tType, nil)
+}
+
+func (s *Scanner) scanBlockComment() {
+	for (s.peek() != '*' || s.peekNext() != '/') && !s.isAtEnd() {
+		if s.peek() == '\n' {
+			s.line++
+		}
+
+		if s.peek() == '/' && s.peekNext() == '*' {
+			s.advance()
+			s.advance()
+
+			s.scanBlockComment()
+
+			continue
+		}
+
+		s.advance()
+	}
+
+	if s.isAtEnd() {
+		errorm(s.line, "unterminated comment")
+		return
+	}
+
+	s.advance()
+	s.advance()
 }
