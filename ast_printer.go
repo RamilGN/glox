@@ -8,7 +8,7 @@ import (
 
 var errAstPrinter = errors.New("[AstPrinter]")
 
-type AstPrinter []struct{}
+type AstPrinter struct{}
 
 func (a *AstPrinter) Print(e Expr) (string, error) {
 	res, err := e.Accept(a)
