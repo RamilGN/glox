@@ -2,7 +2,16 @@
 
 package main
 
-type Expr any
+type Visitor interface {
+	VisitBinary(*Binary) any
+	VisitGrouping(*Grouping) any
+	VisitLiteral(*Literal) any
+	VisitUnary(*Unary) any
+}
+
+type Expr interface {
+	Accept(Visitor) any
+}
 
 type Binary struct {
 	Left     Expr
@@ -10,15 +19,31 @@ type Binary struct {
 	Right    Expr
 }
 
+func (e *Binary) Accept(visitor Visitor) any {
+	return visitor.VisitBinary(e)
+}
+
 type Grouping struct {
 	Expression Expr
+}
+
+func (e *Grouping) Accept(visitor Visitor) any {
+	return visitor.VisitGrouping(e)
 }
 
 type Literal struct {
 	Object any
 }
 
+func (e *Literal) Accept(visitor Visitor) any {
+	return visitor.VisitLiteral(e)
+}
+
 type Unary struct {
 	Operator Token
 	Right    Expr
+}
+
+func (e *Unary) Accept(visitor Visitor) any {
+	return visitor.VisitUnary(e)
 }

@@ -2,7 +2,15 @@
 
 package main
 
-type Expr any
+type Visitor interface {
+    {{- range . }}
+        Visit{{ .TypeName }}(*{{ .TypeName }}) any
+    {{- end }}
+}
+
+type Expr interface {
+	Accept(Visitor) any
+}
 
 {{ range . }}
     {{- $fields := .Fields }}
@@ -11,5 +19,9 @@ type Expr any
         {{- range $field := $fields }}
             {{ $field.Name }} {{ $field.TypeName }}
         {{- end }}
+    }
+
+    func (e *{{ .TypeName }}) Accept(visitor Visitor) any {
+	    return visitor.Visit{{ .TypeName }}(e)
     }
 {{ end }}
