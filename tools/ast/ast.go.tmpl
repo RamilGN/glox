@@ -4,12 +4,12 @@ package main
 
 type Visitor interface {
     {{- range . }}
-        Visit{{ .TypeName }}(*{{ .TypeName }}) any
+        Visit{{ .TypeName }}(*{{ .TypeName }}) (any, error)
     {{- end }}
 }
 
 type Expr interface {
-	Accept(Visitor) any
+	Accept(Visitor) (any, error)
 }
 
 {{ range . }}
@@ -21,7 +21,7 @@ type Expr interface {
         {{- end }}
     }
 
-    func (e *{{ .TypeName }}) Accept(visitor Visitor) any {
+    func (e *{{ .TypeName }}) Accept(visitor Visitor) (any, error) {
 	    return visitor.Visit{{ .TypeName }}(e)
     }
 {{ end }}
