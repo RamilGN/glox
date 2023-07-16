@@ -21,6 +21,19 @@ type Expr interface {
         {{- end }}
     }
 
+    func New{{ .TypeName }}(
+        {{- range $field := $fields}}
+            {{$field.Name }} {{ $field.TypeName }},
+        {{- end }}
+        ) *{{ .TypeName }} {
+
+        return &{{ .TypeName }}{
+            {{- range $field := $fields}}
+                {{$field.Name }}: {{ $field.Name }},
+            {{- end }}
+        }
+    }
+
     func (e *{{ .TypeName }}) Accept(visitor Visitor) (any, error) {
 	    return visitor.Visit{{ .TypeName }}(e)
     }

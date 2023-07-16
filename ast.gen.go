@@ -19,12 +19,34 @@ type Binary struct {
 	Right    Expr
 }
 
+func NewBinary(
+	Left Expr,
+	Operator Token,
+	Right Expr,
+) *Binary {
+
+	return &Binary{
+		Left:     Left,
+		Operator: Operator,
+		Right:    Right,
+	}
+}
+
 func (e *Binary) Accept(visitor Visitor) (any, error) {
 	return visitor.VisitBinary(e)
 }
 
 type Grouping struct {
 	Expression Expr
+}
+
+func NewGrouping(
+	Expression Expr,
+) *Grouping {
+
+	return &Grouping{
+		Expression: Expression,
+	}
 }
 
 func (e *Grouping) Accept(visitor Visitor) (any, error) {
@@ -35,6 +57,15 @@ type Literal struct {
 	Object any
 }
 
+func NewLiteral(
+	Object any,
+) *Literal {
+
+	return &Literal{
+		Object: Object,
+	}
+}
+
 func (e *Literal) Accept(visitor Visitor) (any, error) {
 	return visitor.VisitLiteral(e)
 }
@@ -42,6 +73,17 @@ func (e *Literal) Accept(visitor Visitor) (any, error) {
 type Unary struct {
 	Operator Token
 	Right    Expr
+}
+
+func NewUnary(
+	Operator Token,
+	Right Expr,
+) *Unary {
+
+	return &Unary{
+		Operator: Operator,
+		Right:    Right,
+	}
 }
 
 func (e *Unary) Accept(visitor Visitor) (any, error) {

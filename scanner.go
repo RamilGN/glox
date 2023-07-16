@@ -29,7 +29,7 @@ func (s *Scanner) ScanTokens() {
 		s.scanToken()
 	}
 
-	s.tokens = append(s.tokens, Token{tType: eof, lexeme: []rune{}, literal: nil, line: s.line})
+	s.tokens = append(s.tokens, NewToken(eof, []rune{}, nil, s.line))
 }
 
 func (s *Scanner) scanToken() {
@@ -132,7 +132,7 @@ func (s *Scanner) advance() rune {
 
 func (s *Scanner) addToken(tType TokenType, literal any) {
 	text := s.source[s.start:s.current]
-	s.tokens = append(s.tokens, Token{tType: tType, lexeme: text, literal: literal, line: s.line})
+	s.tokens = append(s.tokens, NewToken(tType, text, literal, s.line))
 }
 
 // match consumes next expected char.
