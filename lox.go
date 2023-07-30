@@ -21,8 +21,10 @@ func report(line int, where, message string) {
 }
 
 type Lox struct {
-	rw       *bufio.ReadWriter
-	hadError bool
+	rw              *bufio.ReadWriter
+	hadError        bool
+	hadRuntimeError bool
+	interpreter     *Interpreter
 }
 
 func NewLox(rw *bufio.ReadWriter) *Lox {
@@ -31,6 +33,8 @@ func NewLox(rw *bufio.ReadWriter) *Lox {
 	}
 
 	l := Lox{rw: rw}
+	i := Interpreter{lox: &l}
+	l.interpreter = &i
 
 	return &l
 }
@@ -100,6 +104,10 @@ func (l *Lox) runFile(fileName string) error {
 		return fmt.Errorf("%w. %w", errLox, err)
 	}
 
+	if l.hadRuntimeError {
+		return fmt.Errorf("%w. %w", errLox, err)
+	}
+
 	return nil
 }
 
@@ -134,6 +142,25 @@ func (l *Lox) runPrompt() error {
 		if err != nil {
 			return fmt.Errorf("%w. %w", errLox, err)
 		}
+	}
+
+	return nil
+}
+
+// TODO: runtimeError - error -> RunTimeError.
+func (l *Lox) runtimeError(errObj error) error {
+	l.hadRuntimeError = true
+
+	_, err := l.rw.WriteString(errObj.Error())
+	if err != nil {
+		return fmt.Errorf("%w. %w", errLox, err)
+	}
+
+	l.rw.Flush()
+
+	err = l.rw.Flush()
+	if err != nil {
+		return fmt.Errorf("%w. %w", errLox, err)
 	}
 
 	return nil

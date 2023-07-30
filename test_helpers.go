@@ -21,6 +21,14 @@ func requireNil(t *testing.T, val any) {
 	}
 }
 
+func requireNotNil(t *testing.T, val any) {
+	t.Helper()
+
+	if val == nil {
+		t.Fatalf("value: %v is nil", val)
+	}
+}
+
 func assertNotNil(t *testing.T, val any) {
 	t.Helper()
 
@@ -55,5 +63,13 @@ func assertType(t *testing.T, expected, actual any) {
 	actualType := reflect.TypeOf(actual)
 	if expectedType != actualType {
 		t.Errorf("expected type: %v, actual type: %v", expectedType, actualType)
+	}
+}
+
+func assertEqual(t *testing.T, expected, actual any) {
+	t.Helper()
+
+	if expected != actual {
+		t.Errorf("expected %+v, actual %+v", expected, actual)
 	}
 }
